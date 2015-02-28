@@ -1,0 +1,155 @@
+﻿<Page
+    x:Class="Imagine.Pages.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imagine.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Accept" Label="save" Click="AcceptButton_Click"/>
+            <AppBarButton Icon="Cancel" Label="deny" Click="DenyButton_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="22" Margin="0,0,0,0"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="0,0,0,0">
+            <Pivot x:Name="PivotSettings">
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="settings"/>
+                    </PivotItem.Header>
+        
+                    <ScrollViewer>
+                        <StackPanel Width="340">
+                            <!--USER NAME-->
+                            <TextBlock Text="USERNAME" FontSize="18" FontWeight="Bold" 
+                                       Foreground="{ThemeResource PhoneAccentBrush}"/>
+
+                        
+                            <TextBox x:Name="BoxName"
+                                     Background="{ThemeResource PhoneBackgroundBrush}"
+                                     Foreground="{ThemeResource PhoneForegroundBrush}"
+                                     GotFocus="BoxName_GotFocus"
+                                     LostFocus="BoxName_LostFocus"/>
+                            <TextBlock Text="You can change your name visible by others here"
+                                       FontSize="16"
+                                       Opacity="0.5"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,12"/>
+                        
+                            <!--LANGUAGE SELECTION-->
+                            <TextBlock x:Name="TBLang" 
+                                       Text="LANG" 
+                                       FontSize="18" 
+                                       FontWeight="Bold" 
+                                       Foreground="{ThemeResource PhoneAccentBrush}"/>
+                            
+                            <Button x:Name="ButtonLanguage"
+                                    HorizontalAlignment="Left"
+                                    Content="Language" 
+                                    Width="340">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Name="LanguageFrench" Text="Français" Click="LanguageFrench_Click"/>
+                                        <MenuFlyoutItem x:Name="LanguageEnglish" Text="English" Click="LanguageEnglish_Click"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <TextBlock FontSize="16" 
+                                       Opacity="0.5"
+                                       TextWrapping="Wrap" 
+                                       Text="The content will be different according to the language"/>
+
+                            <!--DYNAMIC TILE-->
+                            <TextBlock x:Name="TBDynamicTile"
+                                       Text="Dynamic Tile"
+                                       FontSize="22"
+                                       Margin="0,24,0,0"/>
+                        
+                            <TextBlock Text="Different quotes will be displayed on the main tile of the start screen"
+                                       Opacity="0.5"
+                                       FontSize="16"
+                                       TextWrapping="Wrap"/>
+                        
+                            <ToggleSwitch x:Name="TGDynamicTile"
+                                          OffContent="OFF"
+                                          OnContent="ON"
+                                          Width="340"
+                                          HorizontalAlignment="Left"
+                                          Toggled="TGDynamicTile_Toggled"/>
+
+                            <!--DYNAMIC BACKGROUND-->
+                            <TextBlock x:Name="TBDynamicBackground"
+                                       Text="Dynamic Background"
+                                       FontSize="22"
+                                       Margin="0,24,0,0"/>
+
+                            <TextBlock Text="The background on the main screen will change regulary if this option is activated"
+                                       Opacity="0.5"
+                                       FontSize="16"
+                                       TextWrapping="Wrap"/>
+
+                            <ToggleSwitch x:Name="TGDynamicBackground"
+                                          OffContent="OFF"
+                                          OnContent="ON"
+                                          Width="340"
+                                          HorizontalAlignment="Left"
+                                          Toggled="TGDynamicBackground_Toggled"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+                
+                <PivotItem Header="about">
+                    <StackPanel>
+                        <Button x:Name="ButtonContactMe" 
+                                Content="say something"
+                                HorizontalAlignment="Left"
+                                Width="340"
+                                Click="ButtonContactMe_Click"/>
+                        <TextBlock Text="Contact me if you have any problem or suggestion."
+                                   FontSize="18"
+                                   Opacity="0.5"
+                                   TextWrapping="Wrap"/>
+                        
+                        <TextBlock x:Name="About"
+                                   Text="Version 1.1"
+                                   FontSize="18"
+                                   Margin="0,24,0,0"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock x:Name="AboutNotes"
+                                   Text="Initial release"
+                                   FontSize="18"
+                                   Opacity="0.5"
+                                   Margin="0,0,0,0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </PivotItem>
+            </Pivot>
+
+        </Grid>
+    </Grid>
+</Page>

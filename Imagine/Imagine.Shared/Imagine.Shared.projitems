@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>337a452c-cea4-4eda-a721-4ca4f1d6d4f3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Imagine</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ImageSaver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\MyDataSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\RssHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\TileSetter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Dailybackground.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObjectCreation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\User.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\WebMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Quote.cs" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Backgrounds\bg1.jpg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Backgrounds\bg2.jpg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Backgrounds\bg3.jpg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Pacifico.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconCheckWhite.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconBulbWhite.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconBulbSadBlack.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconBulb.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconQuote.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconRefreshWhite.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\Logo.scale-240.png" />
+    <Content Include="$(MSBuildThisFileDirectory)DataModel\SampleData.json" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LightGray.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\MediumGray.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\DarkGray.png" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\NavigationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\RelayCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\SuspensionManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ObservableDictionary.cs" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-US\Resources.resw" />
+  </ItemGroup>
+</Project>

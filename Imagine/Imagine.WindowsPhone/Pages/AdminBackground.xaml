@@ -1,0 +1,119 @@
+﻿<Page
+    x:Class="Imagine.Pages.Adminbackground"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imagine.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    
+    <Page.Resources>
+        <ResourceDictionary>
+            <MenuFlyout x:Key="DailybackgroundMenuFlyout">
+                <MenuFlyout.MenuFlyoutPresenterStyle>
+                    <Style TargetType="MenuFlyoutPresenter">
+                        <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+                        <Setter Property="BorderThickness" Value="5"/>
+                    </Style>
+                </MenuFlyout.MenuFlyoutPresenterStyle>
+
+                <MenuFlyoutItem Text="update" Click="Update_Click"/>
+                <MenuFlyoutItem Text="delete" Click="Delete_Click"/>
+            </MenuFlyout>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="AppBarButtonAdd" Icon="Add" Label="new" Click="AppBarButtonAdd_Click"/>
+            <AppBarButton x:Name="AppBarButtonUpload" Icon="Upload" Label="upload" Click="AppBarButtonUpload_Click" Visibility="Collapsed"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="22" Margin="0,0,0,0"/>
+            <TextBlock Text="Dailybackground" FontSize="18" FontWeight="Light"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid x:Name="StackList" Visibility="Visible">
+                <Grid.RenderTransform>
+                    <CompositeTransform/>
+                </Grid.RenderTransform>
+                
+                <TextBlock x:Name="TBNoEntry" Text="There's no entry at the moment" FontSize="22" FontWeight="Light"/>
+                
+                <ListView x:Name="ListViewDailybackground"
+                          ItemsSource="{Binding}"
+                          IsItemClickEnabled="True"
+                          ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,27.5" Opacity="1" Loaded="Item_Loaded"
+                                        Tapped="Dailybackground_Tapped" 
+                                        FlyoutBase.AttachedFlyout="{StaticResource DailybackgroundMenuFlyout}">
+                                <ProgressBar IsIndeterminate="True" IsEnabled="True" Margin="0,100,0,0"/>
+                                <Image Source="{Binding url}" Height="200" Stretch="UniformToFill" Loaded="Thumbnail_Loading" ImageOpened="Thumbnail_Loaded"/>
+                                <TextBlock Text="{Binding url}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding __updatedAt}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                <TextBlock Text="{Binding day}" FontSize="20" FontWeight="Light" Foreground="{ThemeResource PhoneAccentBrush}"/>
+                                <TextBlock Text="{Binding Id}" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+
+            <!--ADD NEW DAILYBACKGROUND PANEL-->
+            <Grid x:Name="StackAddNew" Visibility="Collapsed" Opacity="0" Canvas.ZIndex="2">
+                <Grid.RenderTransform>
+                    <CompositeTransform/>
+                </Grid.RenderTransform>
+                
+                <TextBlock Text="Add a new background entry into the database"
+                           FontSize="22"
+                           Height="90"
+                           TextWrapping="Wrap"
+                           FontWeight="Light"
+                           Margin="0,12,0,22"
+                           VerticalAlignment="Top"/>
+                
+                <TextBox x:Name="BoxDailybackground"
+                         Width="340"
+                         Margin="0,120,0,0"
+                         Background="{ThemeResource PhoneBackgroundBrush}"
+                         GotFocus="BoxDailybackground_GotFocus"
+                         LostFocus="BoxDailybackground_LostFocus"/>
+                
+                <DatePicker x:Name="DatePickerBackground" 
+                            Background="{ThemeResource PhoneAccentBrush}"
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Margin="0,200,0,0" 
+                            Header="Date Time"
+                            DayFormat="{}{dayofweek.full}"
+                            MonthFormat="{}{month.full}"
+                            Width="340"/>
+
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

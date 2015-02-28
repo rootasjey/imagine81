@@ -1,0 +1,334 @@
+﻿<Page
+    x:Class="Imagine.HubPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imagine"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    d:DataContext="{Binding Source={d:DesignData Source=../Imagine.Shared/DataModel/SampleData.json, Type=data:SampleDataSource}}"
+    xmlns:data="using:Imagine.Data"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="Assets/HubBackground.png"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <ImageBrush x:Key="HubBackgroundImageBrush" ImageSource="{x:Null}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <DataTemplate x:Key="HubSectionHeaderTemplate">
+                <TextBlock Margin="0,0,0,-9.5" Text="{Binding}"/>
+            </DataTemplate>
+
+            <!-- Grid-appropriate item template as seen in section 2 -->
+            <DataTemplate x:Key="Standard200x180TileItemTemplate">
+                <Grid Margin="0,0,9.5,9.5" Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
+                    <Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" Height="138.5" Width="138.5"/>
+                    <TextBlock Text="{Binding Title}" VerticalAlignment="Bottom" Margin="9.5,0,0,6.5" Style="{ThemeResource BaseTextBlockStyle}"/>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="StandardTripleLineItemTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" Margin="0,9.5,0,0" Grid.Column="0" HorizontalAlignment="Left">
+                        <Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" Height="79" Width="79"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="14.5,0,0,0">
+                        <TextBlock Text="{Binding Title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Description}" Style="{ThemeResource ListViewItemContentTextBlockStyle}" Foreground="{ThemeResource PhoneMidBrush}" />
+                        <TextBlock Text="{Binding Subtitle}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="StandardDoubleLineItemTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" Margin="0,9.5,0,0" Grid.Column="0" HorizontalAlignment="Left">
+                        <Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" Height="79" Width="79"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="14.5,0,0,0">
+                        <TextBlock Text="{Binding Title}" Style="{ThemeResource ListViewItemTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Subtitle}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <Storyboard x:Name="SbLoadingText">
+            	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="TBLoading">
+            		<EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
+            		<EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="1"/>
+            	</DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+
+            <!-- Declare the shared flyout as a resource. -->
+            <MenuFlyout x:Key="QuoteMenuFlyout">
+                <MenuFlyout.MenuFlyoutPresenterStyle>
+                    <Style TargetType="MenuFlyoutPresenter">
+                        <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+                        <Setter Property="BorderThickness" Value="5"/>
+                    </Style>
+                </MenuFlyout.MenuFlyoutPresenterStyle>
+                
+                <MenuFlyoutItem Text="share" Click="Share_Click"/>
+                <MenuFlyoutItem Text="add to favorites" Click="AddToFavorites_Click"/>
+            </MenuFlyout>
+
+            <MenuFlyout x:Key="FavoritesMenuFlyout">
+                <MenuFlyout.MenuFlyoutPresenterStyle>
+                    <Style TargetType="MenuFlyoutPresenter">
+                        <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+                        <Setter Property="BorderThickness" Value="5"/>
+                    </Style>
+                </MenuFlyout.MenuFlyoutPresenterStyle>
+
+                <MenuFlyoutItem Text="share" Click="Share_Click"/>
+                <MenuFlyoutItem Text="remove from favorites" Click="RemoveFromFavorites_Click"/>
+            </MenuFlyout>
+        </ResourceDictionary>
+
+
+    </Page.Resources>
+
+    <!--APP BAR-->
+    <Page.BottomAppBar>
+        <CommandBar Name="CommandBarHubPage" Opacity="1" ClosedDisplayMode="Minimal">
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="Create_Command" Label="create" Click="Create_Command_Click"/>
+                <AppBarButton x:Name="Search_Command" Label="search" Click="Search_Command_Click" Visibility="Collapsed"/>
+                <AppBarButton x:Name="Refresh_Command" Label="refresh" Click="Refresh_Command_Click"/>
+                <AppBarButton x:Name="Settings_Command" Label="settings" Click="Settings_Command_Click"/>
+                <AppBarButton x:Name="Loadbg_Command" Label="background" Click="Loadbg_Command_Click" Visibility="Collapsed"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot">
+        <Hub x:Name="Hub" x:Uid="Hub">
+            <Hub.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="40" Margin="0,24,0,0"/>
+                </DataTemplate>
+            </Hub.HeaderTemplate>
+            <Hub.Background>
+                <ImageBrush x:Name="AppBackground" ImageSource="/Assets/Backgrounds/bg3.jpg" Stretch="UniformToFill" Opacity="0.4"
+                            ImageOpened="AppBackground_ImageOpened" ImageFailed="AppBackground_ImageFailed"/>
+            </Hub.Background>
+            <Hub.RenderTransform>
+                <CompositeTransform/>
+            </Hub.RenderTransform>
+            
+            <HubSection x:Name="HubToday" x:Uid="HubSection1">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="TODAY" FontSize="24"/>
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                
+                <DataTemplate>
+                    <Grid>
+                        <ProgressRing x:Name="ProgressRingToday" 
+                                      Height="100" Width="100"
+                                      Margin="0,-100,0,0"
+                                      Background="Transparent"
+                                      IsActive="True"/>
+
+                        <ListView x:Name="ListViewToday"
+                                  ItemsSource="{Binding}"
+                                  IsItemClickEnabled="True"
+                                  Visibility="Visible"
+                                  ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Opacity="1"
+                                                    Loaded="ItemToday_Loaded">
+                                        <Grid Opacity="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="12"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Rectangle Width="10" Fill="{StaticResource PhoneAccentBrush}" Opacity="0"/>
+                                            
+                                            <TextBlock Text="{Binding Content}"
+                                                       FontSize="34"
+                                                       FontWeight="Bold"
+                                                       TextWrapping="Wrap"
+                                                       Margin="12,-12,0,0"
+                                                       Grid.Column="1"/>
+                                        </Grid>
+                                        
+                                            <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light" Margin="24,0,0,0" Opacity="0"/>
+                                            <TextBlock Text="{Binding Reference}" FontSize="18" FontWeight="Bold" Margin="24,0,0,0" Opacity="0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+
+            <HubSection x:Name="HubBefore" x:Uid="HubSection2">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="CITATIONS" FontSize="24"/>
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                
+                <DataTemplate>
+                    <Grid>
+                        <ProgressRing x:Name="ProgressRingBefore" 
+                                      Height="100" Width="100"
+                                      Margin="0,-100,0,0"
+                                      Background="Transparent"
+                                      IsActive="True"/>
+                    
+                        <ListView x:Name="ListViewBefore"
+                                  ItemsSource="{Binding}"
+                                  IsItemClickEnabled="True"
+                                  ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,27.5" Opacity="0" Loaded="ItemBefore_Loaded"
+                                                Tapped="Quote_Tapped" FlyoutBase.AttachedFlyout="{StaticResource QuoteMenuFlyout}">
+                                        <TextBlock Text="{Binding Content}" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light"/>
+                                        <TextBlock Text="{Binding Reference}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+
+            <HubSection x:Name="HubFavorites" x:Uid="HubSection3">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="FAVORITES" FontSize="24" />
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                
+                <DataTemplate>
+                    <Grid>
+                        <ProgressRing x:Name="ProgressRingFavorites" 
+                                          Height="200" Width="200"
+                                          Background="Transparent"
+                                          IsActive="True"/>
+                        <StackPanel>
+                        <TextBlock x:Name="TBVoid" 
+                                   Text="Hey, there're no quotes in favorites for now."
+                                   FontSize="24"
+                                   TextWrapping="Wrap"
+                                   FontWeight="ExtraLight"
+                                   Height="100"
+                                   VerticalAlignment="Top"
+                                   />
+                        </StackPanel>
+                        
+                        <ListView x:Name="ListViewFavorites"
+                                  ItemsSource="{Binding}"
+                                  IsItemClickEnabled="True"
+                                  ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,27.5" Opacity="0" Loaded="ItemBefore_Loaded"
+                                                Tapped="Quote_Tapped" FlyoutBase.AttachedFlyout="{StaticResource FavoritesMenuFlyout}">
+                                        <TextBlock Text="{Binding Content}" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light"/>
+                                        <TextBlock Text="{Binding Reference}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+        </Hub>
+
+        <TextBlock x:Name="TBLoading" 
+                   Text="Please Wait..."
+                   FontSize="20"
+                   Margin="0,180,0,0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+
+        <!--SEARCH GRID : SEARCH QUOTES-->
+        <Grid x:Name="GridSearchHub"
+                  Background="{ThemeResource PhoneBackgroundBrush}"
+                  Margin="0,-24,0,0"
+                  Canvas.ZIndex="1"
+                  Opacity="0"
+                  Visibility="Collapsed"
+                  RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <CompositeTransform/>
+            </Grid.RenderTransform>
+            <StackPanel>
+                <TextBlock x:Name="BlockAuthenficateMessage" 
+                           Text="SEARCH"
+                           FontSize="42"
+                           Margin="12,24,24,0"
+                           FontWeight="Normal"
+                           TextWrapping="Wrap"/>
+                
+                <TextBox x:Name="TextBoxSearch"
+                         Margin="12,12,12,24"
+                         Background="{ThemeResource PhoneBackgroundBrush}"
+                         Foreground="White"/>
+
+                <!-- Personal quotes list -->
+                <ListView x:Name="ListViewSearch"
+                          Grid.Row="1"
+                          ItemsSource="{Binding}"
+                          IsItemClickEnabled="True"
+                          ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,27.5" Opacity="0" Loaded="ItemSearch_Loaded"
+                                        Tapped="Quote_Tapped" FlyoutBase.AttachedFlyout="{StaticResource QuoteMenuFlyout}">
+                                <TextBlock Text="{Binding Content}" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light"/>
+                                <TextBlock Text="{Binding Reference}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+
+            <!--Loading animation-->
+            <Grid x:Name="GridLoadingSearch"
+                  Visibility="Collapsed"
+                  Height="200"
+                  Background="{ThemeResource PhoneBackgroundBrush}"
+                  Grid.Row="0">
+                <ProgressBar x:Name="ProgressBarSearch"
+                                 Height="40"
+                                 Grid.Row="1"
+                                 IsEnabled="True"
+                                 Margin="0,-80,0,0"
+                                 IsIndeterminate="True"/>
+                <TextBlock x:Name="TBLoadingSearch"
+                               Text="looking for quotes..."
+                               FontSize="24"
+                               Grid.Row="1"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontWeight="Light"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,394 @@
+﻿<Page
+    x:Class="Imagine.Pages.Create"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Imagine.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <MenuFlyout x:Key="QuoteMenuFlyout">
+                <MenuFlyout.MenuFlyoutPresenterStyle>
+                    <Style TargetType="MenuFlyoutPresenter">
+                        <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+                        <Setter Property="BorderThickness" Value="5"/>
+                    </Style>
+                </MenuFlyout.MenuFlyoutPresenterStyle>
+
+                <MenuFlyoutItem Text="share" Click="Share_Click"/>
+                <MenuFlyoutItem Text="edit" Click="Edit_Click"/>
+                <MenuFlyoutItem Text="delete" Click="Delete_Click"/>
+            </MenuFlyout>
+
+            <MenuFlyout x:Key="SortMenuFlyout">
+                <MenuFlyoutItem x:Name="MenuFlyoutItemOrderBy" Text="newer first" Click="Chronology_Click" Visibility="Collapsed"/>
+                <MenuFlyoutItem Text="all quotes" Click="LangAll_Click"/>
+                <MenuFlyoutItem Text="english quotes" Click="LangEN_Click"/>
+                <MenuFlyoutItem Text="french quotes" Click="LangFR_Click"/>
+            </MenuFlyout>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <!--COMMAND BAR-->
+    <Page.BottomAppBar>
+        <CommandBar Name="CommandBarCreate" Visibility="Visible" Opacity="1" ClosedDisplayMode="Compact">
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="Personal_Command" Label="book" Click="Personal_Command_Click"/>
+                <AppBarButton x:Name="RefreshPersonal_Command" Label="refresh" Visibility="Collapsed" 
+                              Click="RefreshPersonal_Command_Click"/>
+                <AppBarButton x:Name="Connect_Command" Label="connect" Click="Connect_Command_Click"/>
+            </CommandBar.SecondaryCommands>
+            <AppBarButton x:Name="AppBarButtonAccept" Icon="Accept" Click="AppBarButtonAccept_Click" Label="ok"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="24,0,0,0">
+            <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="22" Margin="0,12,0,0"/>
+            <TextBlock x:Name="ProgressText" Text="" FontSize="16" Opacity=".5" Visibility="Collapsed"/>
+            <ProgressBar x:Name="ProgressTop" IsIndeterminate="False" IsEnabled="False" Height="10" Visibility="Collapsed"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="24,0,24,0">
+            
+            <Grid x:Name="GridCreate" 
+                   Visibility="Collapsed"
+                   RenderTransformOrigin="0.5,0.5">
+            	<Grid.RenderTransform>
+            		<CompositeTransform/>
+            	</Grid.RenderTransform>
+
+                <ScrollViewer>
+                    <Grid>
+
+                        <!--GRID DE CHOIX CITATION/INSPIRATION-->
+                        <Grid x:Name="GridCreateChoice" 
+                                  Visibility="Visible"
+                                  RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform>
+                                <CompositeTransform/>
+                            </Grid.RenderTransform>
+
+                            <StackPanel x:Name="StackType" Margin="0,0,0,0">
+                                <TextBlock x:Name="BlockType"
+                                               FontSize="32"
+                                               Margin="0,0,0,0"
+                                               TextWrapping="Wrap"
+                                               FontWeight="ExtraLight"
+                                               Text="What do you want to create?"/>
+
+                                <!--BOUTONS-->
+                                <Grid x:Name="StackCreateButtons" Margin="0,40,0,0">
+                                    <StackPanel>
+                                        <Grid x:Name="GridButtonQuote"
+                                                  Background="{ThemeResource PhoneChromeBrush}"
+                                                  Height="150"
+                                                  PointerEntered="ButtonQuote_PointerEntered"
+                                                  PointerExited="ButtonQuote_PointerExited"
+                                                  Tapped="ButtonCreateQuote_Tap">
+
+                                            <Image x:Name="ImageQuote"
+                                                       Height="90" Width="90"
+                                                       Margin="0,-30,0,0"
+                                                       Source="/Assets/Icons/iconQuote.png"/>
+                                            <TextBlock Text="Create a quote"
+                                                           FontSize="28"
+                                                           FontWeight="Light"
+                                                           VerticalAlignment="Bottom"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,0,0,10"/>
+                                        </Grid>
+
+                                        <Grid x:Name="GridButtonWordFlow"
+                                                  Background="{ThemeResource PhoneChromeBrush}"
+                                                  Height="150"
+                                                  Margin="0,20,0,0"
+                                                  PointerEntered="ButtonQuote_PointerEntered"
+                                                  PointerExited="ButtonQuote_PointerExited"
+                                                  Tapped="ButtonCreateWorldflow_Tap">
+
+                                            <Image x:Name="ImageWordFlow"
+                                                       Height="90" Width="90"
+                                                       Margin="0,-30,0,0"
+                                                       Source="/Assets/Icons/iconBulb.png"/>
+                                            <TextBlock Text="Create a wordflow"
+                                                           FontSize="28"
+                                                           FontWeight="Light"
+                                                           VerticalAlignment="Bottom"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,0,0,10"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+
+                        <!--GRID DE REDACTION-->
+                        <Grid x:Name="GridWrite" 
+                                  Visibility="Collapsed" 
+                                  RenderTransformOrigin="0.5,0.5">
+
+                            <Grid.RenderTransform>
+                                <CompositeTransform/>
+                            </Grid.RenderTransform>
+
+
+
+                            <StackPanel x:Name="StackCreate">
+                                <TextBlock x:Name="BlockCreate"
+                                               FontSize="42"
+                                               FontWeight="ExtraLight"
+                                               Margin="0,0,0,0"
+                                               Text="Let's go..."/>
+
+                                <!--TEXT POUR REDIGER-->
+                                <TextBlock Text="Content" FontSize="18" Margin="0,24,0,0" Opacity=".5"/>
+                                <TextBox x:Name="BoxCreate"
+                                             Background="Transparent"
+                                             Height="Auto"
+                                             MaxHeight="200"
+                                             Margin="0,0,10,0"
+                                             TextWrapping="Wrap"
+                                             GotFocus="BoxCreate_GotFocus"
+                                             LostFocus="BoxCreate_LostFocus"
+                                             TextChanged="BoxCreate_TextChanged"/>
+
+                                <!--NOMBRE DE CARACTERES-->
+                                <TextBlock x:Name="BlockWordCount"
+                                           FontFamily="Segoe WP Black"
+                                           Canvas.ZIndex="-1"
+                                           Margin="0,0,0,0"
+                                           Height="40"
+                                           Opacity="0.5"
+                                           FontSize="32"
+                                           Text="0"/>
+
+                                <Grid x:Name="GridReference" 
+                                          MaxWidth="400"
+                                          Margin="0,-30,12,24"
+                                          HorizontalAlignment="Right"
+                                          Background="{StaticResource PhoneAccentBrush}"
+                                          Tapped="GridReference_Tapped">
+
+                                    <TextBlock x:Name="BlockReference"
+                                                Text="Référence" 
+                                                Margin="6" 
+                                                FontSize="18"
+                                                TextWrapping="Wrap"
+                                                TextAlignment="Center"
+                                                Visibility="Visible" 
+                                                Foreground="White"/>
+
+                                    <TextBox x:Name="BoxReference" 
+                                                 MinWidth="100"
+                                                 Visibility="Collapsed"
+                                                 LostFocus="BoxReference_LostFocus"/>
+                                </Grid>
+                            </StackPanel>
+
+                        </Grid>
+
+                        <!--GRID DE CHOIX DE TAGS-->
+                        <Grid x:Name="GridTags" 
+                                  RenderTransformOrigin="0.5,0.5" 
+                                  Visibility="Collapsed">
+                            <Grid.RenderTransform>
+                                <CompositeTransform/>
+                            </Grid.RenderTransform>
+                            <StackPanel x:Name="StackTags">
+                                <TextBlock x:Name="BlockTitletags"
+                                           FontSize="36"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,24"
+                                           Text="Choose some tags"
+                                           FontWeight="Light"/>
+
+                                <ListView x:Name="LVTagSelected">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel x:Name="WrapGridTagSelected"/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                </ListView>
+
+                                <TextBlock Text="Récemment utilisés" Margin="0,24,0,0"/>
+                                <ScrollViewer Height="72" Width="Auto"
+                                              VerticalScrollBarVisibility="Disabled" 
+                                              HorizontalScrollBarVisibility="Auto">
+
+                                    <StackPanel x:Name="StackRecentTags" Orientation="Horizontal">
+                                        <!--CE CONTROLE SERA PEUPLE DANS LE XAML.CS-->
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                                <TextBox x:Name="BoxTag"
+                                             Margin="6,0,12,70"
+                                             VerticalAlignment="Bottom" 
+                                             Background="Transparent"
+                                             KeyDown="BoxTag_KeyDown"
+                                             Tapped="BoxTag_Tap"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid x:Name="GridUpload"
+                                  RenderTransformOrigin="0.5,0.5" 
+                                  Visibility="Collapsed">
+                            <Grid.RenderTransform>
+                                <CompositeTransform/>
+                            </Grid.RenderTransform>
+
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <ProgressRing x:Name="PRUpload"
+                                                  Height="100" Width="100"
+                                                  IsActive="False"/>
+                                <TextBlock x:Name="TBUpload"
+                                               Text="Uploading data, please wait..."
+                                               FontSize="24"
+                                               FontWeight="Light"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+
+            <!--AUTHENTICATION GRID : TO CONNECT WITH A MICROSOFT ACCOUNT-->
+            <Grid x:Name="GridAuthentificate"
+                  Background="{ThemeResource AppBarBackgroundThemeBrush}"
+                  Margin="0,0,0,0"
+                  Canvas.ZIndex="1"
+                  Opacity="0"
+                  Visibility="Collapsed" 
+                  RenderTransformOrigin="0.5,0.5">
+            	<Grid.RenderTransform>
+            		<CompositeTransform/>
+            	</Grid.RenderTransform>
+                <StackPanel>
+                    <TextBlock x:Name="BlockAuthenficateMessage" 
+                               Text="Hello, you can connect to your Microsoft account"
+                               FontSize="22"
+                               Margin="0,24,24,0"
+                               FontWeight="ExtraLight"
+                               TextWrapping="Wrap"/>
+                    
+                    <TextBlock x:Name="TBOAuthExplanations"
+                               Text="You will be able to recover your personal quotes and texts from another device and to claim your imagination to the world"
+                               Margin="0,12,24,0"
+                               TextWrapping="Wrap"
+                               FontSize="18"
+                               Opacity="0.5"/>
+
+                    <TextBlock x:Name="TBOUsernameExplanations"
+                               Text="Your default username will be your Microsoft first name, if you don't have an account. You can change it on the settings page"
+                               Margin="0,12,24,0"
+                               TextWrapping="Wrap"
+                               FontSize="15"
+                               Opacity="0.5"/>
+
+                    <Button x:Name="ButtonAuthentificate" 
+                            Content="signin with Microsoft"
+                            Width="320"
+                            Background="DodgerBlue"
+                            Margin="0,48,0,0"
+                            Click="ButtonAuthentificate_Tap"/>
+
+                    <Button x:Name="ButtonStayAnonymous" 
+                            Content="stay Anonymous"
+                            Width="320"
+                            Margin="0,0,0,0"
+                            Click="ButtonStayAnonymous_Click"/>
+                </StackPanel>
+            </Grid>
+            
+            <!--PERSONAL GRID : WITH PERSONAL QUOTES/WORDFLOWS-->
+            <Grid x:Name="GridPersonal"
+                  Visibility="Collapsed"
+                  Canvas.ZIndex="2"
+                  RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <CompositeTransform/>
+                </Grid.RenderTransform>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock x:Name="PersonalTitle"
+                            Text="Book"
+                            FontSize="36"
+                            FontWeight="Light"/>
+                
+                <HyperlinkButton x:Name="HButtonSort" 
+                                 Content="Sort quotes"
+                                 FontSize="18"
+                                 Foreground="{ThemeResource PhoneAccentBrush}"
+                                 Margin="0,36,0,0"
+                                 Click="HButtonSort_Click"
+                                 FlyoutBase.AttachedFlyout="{StaticResource SortMenuFlyout}"/>
+                
+    
+                <TextBlock x:Name="TBNothingPersonal"
+                           Text="You haven't created something yet, try to go into the create mode."
+                           FontSize="24"
+                           Grid.Row="1"
+                           TextWrapping="Wrap"
+                           FontWeight="Light"/>
+                
+                <!-- Personal quotes list -->
+                <ListView x:Name="ListViewPersonal"
+                          Grid.Row="1"
+                          ItemsSource="{Binding}"
+                          IsItemClickEnabled="True"
+                          ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,27.5" Opacity="0" Loaded="ItemPersonal_Loaded"
+                                        Tapped="Quote_Tapped" FlyoutBase.AttachedFlyout="{StaticResource QuoteMenuFlyout}">
+                                <TextBlock Text="{Binding Content}" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light"/>
+                                <TextBlock Text="{Binding Reference}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+                <!--Loading animation-->
+                <Grid x:Name="GridLoadingPersonal"
+                      Visibility="Collapsed"
+                      Background="{ThemeResource PhoneBackgroundBrush}"
+                      Grid.Row="1">
+                    <ProgressBar x:Name="ProgressBarPersonal"
+                                 Height="40"
+                                 Grid.Row="1"
+                                 IsEnabled="True"
+                                 Margin="0,-80,0,0"
+                                 IsIndeterminate="True"/>
+                    <TextBlock x:Name="TBLoadingPersonal"
+                               Text="updating your book..."
+                               FontSize="24"
+                               Grid.Row="1"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontWeight="Light"/>
+                </Grid>
+                
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
