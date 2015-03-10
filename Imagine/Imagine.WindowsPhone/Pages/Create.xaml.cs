@@ -103,6 +103,14 @@ namespace Imagine.Pages
                     SlideToRight(GridWrite, GridCreateChoice);
                     AppBarButtonAccept.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
+                    // Dans le cas où on serait en mode édition
+                    // on veut supprimer les valeus si l'utilisateur retourne en arrière
+                    if (_updateMode)
+                    {
+                        _updateMode = false;
+                        ResetCreatedValues();
+                    }
+
                     _step--;
                     e.Handled = true;
                 }
@@ -144,6 +152,7 @@ namespace Imagine.Pages
         
         void CommandBarCreate_Closed(object sender, object e)
         {
+            if (_step == 3) { CommandBarCreate.Opacity = 1; return; }
             CommandBarCreate.Opacity = 0;
         }
 
@@ -155,7 +164,7 @@ namespace Imagine.Pages
 
         private void InitializeCommandBar()
         {
-            if (App.WebMethods.isAuthenticated && (App.WebMethods._user != null))
+            if (App.WebMethods._isAuthenticated && (App.WebMethods._user != null))
             {
                 // If we're already connected,show disconnect Command
                 Connect_Command.Label = "disconnect";
@@ -257,11 +266,11 @@ namespace Imagine.Pages
         /// </summary>
         private async Task PassAuth()
         {
-            if (App.WebMethods.firstApplicationLaunch)
+            if (App.WebMethods._firstApplicationLaunch)
             {
                 GridAuthentificate.Opacity = 1;
                 GridAuthentificate.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                App.WebMethods.firstApplicationLaunch = false;
+                App.WebMethods._firstApplicationLaunch = false;
             }
             else
             {
@@ -354,7 +363,7 @@ namespace Imagine.Pages
             CommandBarCreate.Visibility = Windows.UI.Xaml.Visibility.Visible;
             AppBarButtonAccept.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            if (App.WebMethods.isAuthenticated)
+            if (App.WebMethods._isAuthenticated)
             {
                 Connect_Command.Label = "disconnect";
                 App.WebMethods.SaveSettings();
@@ -408,9 +417,9 @@ namespace Imagine.Pages
             CommandBarCreate.Visibility = Windows.UI.Xaml.Visibility.Visible;
             AppBarButtonAccept.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
-            if (App.WebMethods.isAuthenticated)
+            if (App.WebMethods._isAuthenticated)
             {
-                App.WebMethods.isAuthenticated = false;
+                App.WebMethods._isAuthenticated = false;
                 App.WebMethods._user = null;
             }
 
@@ -488,6 +497,7 @@ namespace Imagine.Pages
 
             AppBarButtonAccept.Icon = new SymbolIcon(Symbol.Upload);
             CommandBarCreate.ClosedDisplayMode = AppBarClosedDisplayMode.Compact;
+            CommandBarCreate.Opacity = 1; // Permet d'avoir le bouton "valider" même quand on écrit un nouveau tag
         }
 
 
@@ -729,23 +739,33 @@ namespace Imagine.Pages
             // Si l'utilisateur appuie sur la touche entrée
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                // On vérifie que le nom du tag souhaité
-                // a au moins 3 caractères et ne contient pas de caractères spéciaux
-                if (BoxTag.Text.Length < 3 || TextContainsSpecialCharacter(BoxTag.Text))
-                {
-                    string message = "Le tag que vous souhaitez ajouter doit contenir au moins 3 caractères, et ne doit pas comporter de caractère spécial";
-                    
-                    MessageDialog dialog = new MessageDialog(message);
-                    dialog.ShowAsync();
-                    return;
-                }
-
-                // Et on crée un nouveau tag
-                string tagName = BoxTag.Text.Substring(0, 1).ToUpper() + BoxTag.Text.Substring(1).Replace(" ", "");
-                AddSelectedTag(tagName);    // Ajoute le tag à la citation/l'inspiration
-                UpdateRecentTags(tagName);  // Ne pas oublié d'ajouter ce tag aux tags récemment utilisés
-                BoxTag.Text = "";           // Vide le TextBox
+                CreateTagFromKeyboard();
             }
+        }
+
+        private void AppBarButtonAddTag_Click(object sender, RoutedEventArgs e)
+        {
+            CreateTagFromKeyboard();
+        }
+
+        private void CreateTagFromKeyboard()
+        {
+            // On vérifie que le nom du tag souhaité
+            // a au moins 3 caractères et ne contient pas de caractères spéciaux
+            if (BoxTag.Text.Length < 3 || TextContainsSpecialCharacter(BoxTag.Text))
+            {
+                string message = "Le tag que vous souhaitez ajouter doit contenir au moins 3 caractères, et ne doit pas comporter de caractère spécial";
+
+                MessageDialog dialog = new MessageDialog(message);
+                dialog.ShowAsync();
+                return;
+            }
+
+            // Et on crée un nouveau tag
+            string tagName = BoxTag.Text.Substring(0, 1).ToUpper() + BoxTag.Text.Substring(1).Replace(" ", "");
+            AddSelectedTag(tagName);    // Ajoute le tag à la citation/l'inspiration
+            UpdateRecentTags(tagName);  // Ne pas oublié d'ajouter ce tag aux tags récemment utilisés
+            BoxTag.Text = "";           // Vide le TextBox
         }
 
 
@@ -848,11 +868,40 @@ namespace Imagine.Pages
             GridReference_Tapped(null, null);
         }
 
+        /// <summary>
+        /// Se déclenche quand le TextBox pour créer un tag obtient le focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BoxTag_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Affiche le bouton de création de tag de la Commandbar
+            // Et masque le bouton d'upload de la citation
+            AppBarButtonAccept.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            AppBarButtonAddTag.Visibility = Windows.UI.Xaml.Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Se déclenche quand le TextBox pour créer un tag perd le focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BoxTag_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // Affiche le bouton de création de tag de la Commandbar
+            // Et masque le bouton d'upload de la citation
+            AppBarButtonAccept.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            AppBarButtonAddTag.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+        }
+
         #endregion tags functions
+
+
+
 
         private void Connect_Command_Click(object sender, RoutedEventArgs e)
         {
-            if (!App.WebMethods.isAuthenticated)
+            if (!App.WebMethods._isAuthenticated)
             {
                 // We're not connected, we show login screen
                 if (GridAuthentificate.Opacity != 0) return;
@@ -865,7 +914,7 @@ namespace Imagine.Pages
             {
                 // We're already connected => we want to disconnect
                 Connect_Command.Label = "connect";
-                App.WebMethods.isAuthenticated = false;
+                App.WebMethods._isAuthenticated = false;
                 App.WebMethods._user = null;
                 App.WebMethods.SaveSettings();
 
@@ -1270,7 +1319,7 @@ namespace Imagine.Pages
             q.User = objectCreation.User;
             q.Reference = objectCreation.Reference;
             q.Tag = objectCreation.Tag;
-            q.Lang = App.WebMethods.applicationLanguage;
+            q.Lang = App.WebMethods._applicationLanguage;
 
             if (_updateMode) q.Id = objectCreation.Id;
             return q;
@@ -1366,7 +1415,7 @@ namespace Imagine.Pages
         private async void CheckPersonalOnline()
         {
             // Test if the user is auth
-            if (!App.WebMethods.isAuthenticated)
+            if (!App.WebMethods._isAuthenticated)
             {
                 // Show the Textblock saying that there's no quote if the user isn't auth > if there's no quote in the Collection
                 if (App.WebMethods.CollectionPersonal.Count < 1)
@@ -1394,6 +1443,7 @@ namespace Imagine.Pages
         private async void ResetCreatedValues()
         {
             // Clear object values
+            objectCreation.Id = "";
             objectCreation.Content = "";
             objectCreation.userid = "";
             objectCreation.User = "";
@@ -1404,8 +1454,9 @@ namespace Imagine.Pages
 
             // Clear controls
             BoxCreate.Text = "";
-            BlockReference.Text = "";
-            LVTagSelected.Items.Clear();
+            BlockReference.Text = "Reference";
+            BoxReference.Text = "Reference";
+            LVTagSelected.Items.Clear(); // vide les tags sélectionnés
         }
 
 
@@ -1454,7 +1505,7 @@ namespace Imagine.Pages
             App.WebMethods.SavePersonal();
 
             // Notify the change
-            App.WebMethods.databaseQuoteChanged = true;
+            App.WebMethods._databaseQuoteChanged = true;
         }
 
 
@@ -1546,12 +1597,12 @@ namespace Imagine.Pages
             string description = "";
             string de = "de";
 
-            if (App.WebMethods.applicationLanguage == "FR")
+            if (App.WebMethods._applicationLanguage == "FR")
             {
                 title = "Citation : ";
                 description = "Citation d'Imagine sur Windows Phone";
             }
-            else if (App.WebMethods.applicationLanguage == "EN")
+            else if (App.WebMethods._applicationLanguage == "EN")
             {
                 title = "Quote";
                 de = "by";
@@ -1610,7 +1661,7 @@ namespace Imagine.Pages
                     if (resultDeleted == "true")
                     {
                         // Si tout s'est bien passée
-                        App.WebMethods.databaseQuoteChanged = true;
+                        App.WebMethods._databaseQuoteChanged = true;
 
                         // Delete from personal list
                         if (App.WebMethods.CollectionPersonal.Contains(_quoteToDelete))
@@ -1691,8 +1742,9 @@ namespace Imagine.Pages
                 }
 
                 // GO TO EDIT UI
-                _step = 2; // set the step
+                //_step = 2; // set the step
                 CommandBarCreateMode();
+                GoToStep2("quote");
             }
         }
 
@@ -1797,5 +1849,11 @@ namespace Imagine.Pages
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
+
+        private void Quote_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
     }
 }

@@ -439,10 +439,10 @@ namespace Imagine
             this.navigationHelper.OnNavigatedTo(e);
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
 
-            if (App.WebMethods.databaseQuoteChanged)
+            if (App.WebMethods._databaseQuoteChanged)
             {
                 Refresh_Command_Click(null, null);
-                App.WebMethods.databaseQuoteChanged = false;
+                App.WebMethods._databaseQuoteChanged = false;
             }
         }
 
@@ -478,12 +478,12 @@ namespace Imagine
             string description = "";
             string de = "de";
 
-            if (App.WebMethods.applicationLanguage == "FR")
+            if (App.WebMethods._applicationLanguage == "FR")
             {
                 title = "Citation : ";
                 description = "Citation d'Imagine sur Windows Phone";
             }
-            else if (App.WebMethods.applicationLanguage == "EN")
+            else if (App.WebMethods._applicationLanguage == "EN")
             {
                 title = "Quote";
                 de = "by";
@@ -792,6 +792,11 @@ namespace Imagine
             string imagePath = "Assets\\Icons\\Logo.scale-240.png";
             string text = App.WebMethods.ListSingleItem.First().Content;
             Common.TileSetter.CreateTiles(imagePath, imagePath, text);
+        }
+
+        private void Quote_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
     }
 }

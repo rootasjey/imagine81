@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     
     <Page.BottomAppBar>
         <CommandBar>
@@ -29,121 +30,228 @@
         </Grid.RowDefinitions>
 
         <!-- Title Panel -->
-        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+        <StackPanel Grid.Row="0" Margin="42,0,0,0">
             <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="22" Margin="0,0,0,0"/>
         </StackPanel>
 
         <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="0,0,0,0">
-            <Pivot x:Name="PivotSettings">
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="20,0,0,0">
+            <Pivot x:Name="PivotSettings"
+                   Margin="0,0,0,0">
                 <PivotItem>
                     <PivotItem.Header>
-                        <TextBlock Text="settings"/>
+                        <TextBlock Text="settings" FontSize="26" Margin="4,0,0,0"/>
                     </PivotItem.Header>
         
                     <ScrollViewer>
-                        <StackPanel Width="340">
+                        <StackPanel Width="auto" Margin="0,0,20,0">
+                            
                             <!--USER NAME-->
-                            <TextBlock Text="USERNAME" FontSize="18" FontWeight="Bold" 
-                                       Foreground="{ThemeResource PhoneAccentBrush}"/>
+                            <StackPanel x:Name="StackUsername"
+                                        Margin="0,0,0,42"
+                                        Height="32"
+                                        RenderTransformOrigin="0.5,0.5">
+                                <StackPanel.RenderTransform>
+                                    <CompositeTransform/>
+                                </StackPanel.RenderTransform>
+                                
+                                <StackPanel x:Name="StackUsernameHeader" 
+                                        Orientation="Horizontal"
+                                        RenderTransformOrigin=".5,0.5"
+                                        Tapped="StackUsernameHeader_Tapped">
+                                    <StackPanel.RenderTransform>
+                                        <CompositeTransform/>
+                                    </StackPanel.RenderTransform>
 
-                        
-                            <TextBox x:Name="BoxName"
+                                    <TextBlock Text="username" FontSize="26" FontWeight="Normal" 
+                                       Foreground="{ThemeResource PhoneForegroundBrush}"/>
+                                    <Image x:Name="CloseUsername" Height="25" Width="25" Source="/Assets/Icons/iconCancel-white.png" 
+                                           Margin="10,0,0,0"
+                                       RenderTransformOrigin="0.5,0.5">
+                                        <Image.RenderTransform>
+                                            <CompositeTransform Rotation="45"/>
+                                        </Image.RenderTransform>
+                                    </Image>
+                                </StackPanel>
+
+
+                                <TextBlock Text="You can change your name visible by others here"
+                                       FontSize="16"
+                                       Opacity="0.5"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,6"/>
+                                <TextBox x:Name="BoxName"
+                                     Margin="0,0,0,0"
                                      Background="{ThemeResource PhoneBackgroundBrush}"
                                      Foreground="{ThemeResource PhoneForegroundBrush}"
                                      GotFocus="BoxName_GotFocus"
                                      LostFocus="BoxName_LostFocus"/>
-                            <TextBlock Text="You can change your name visible by others here"
-                                       FontSize="16"
-                                       Opacity="0.5"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,0,12"/>
-                        
-                            <!--LANGUAGE SELECTION-->
-                            <TextBlock x:Name="TBLang" 
-                                       Text="LANG" 
-                                       FontSize="18" 
-                                       FontWeight="Bold" 
-                                       Foreground="{ThemeResource PhoneAccentBrush}"/>
+                            </StackPanel>
                             
-                            <Button x:Name="ButtonLanguage"
-                                    HorizontalAlignment="Left"
-                                    Content="Language" 
-                                    Width="340">
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem x:Name="LanguageFrench" Text="Français" Click="LanguageFrench_Click"/>
-                                        <MenuFlyoutItem x:Name="LanguageEnglish" Text="English" Click="LanguageEnglish_Click"/>
-                                    </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
+                            
+                            <!--LANGUAGE SELECTION-->
+                            <StackPanel x:Name="StackLanguage"
+                                        Margin="0,0,0,42"
+                                        Height="32"
+                                        RenderTransformOrigin="0.5,0.5">
+                                <StackPanel x:Name="StackLanguageHeader" 
+                                            Orientation="Horizontal"
+                                            RenderTransformOrigin=".5,0.5"
+                                            Tapped="StackLanguageHeader_Tapped">
+                                    <StackPanel.RenderTransform>
+                                        <CompositeTransform/>
+                                    </StackPanel.RenderTransform>
+                                    
+                                    <TextBlock Text="language" FontSize="26" FontWeight="Normal" 
+                                       Foreground="{ThemeResource PhoneForegroundBrush}"/>
+                                    <Image x:Name="CloseLanguage" Height="25" Width="25" Source="/Assets/Icons/iconCancel-white.png" Margin="10,0,0,0"
+                                       RenderTransformOrigin="0.5,0.5">
+                                        <Image.RenderTransform>
+                                            <CompositeTransform Rotation="45"/>
+                                        </Image.RenderTransform>
+                                    </Image>
+                                </StackPanel>
 
-                            <TextBlock FontSize="16" 
+                                <Button x:Name="ButtonLanguage"
+                                    HorizontalAlignment="Left"
+                                    Content="Language : Language" 
+                                    Width="auto">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem x:Name="LanguageFrench" Text="Français" Margin="24,0,0,0" Click="LanguageFrench_Click"/>
+                                            <MenuFlyoutItem x:Name="LanguageEnglish" Text="English" Margin="24,0,0,0" Click="LanguageEnglish_Click"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                                <TextBlock FontSize="16" 
                                        Opacity="0.5"
                                        TextWrapping="Wrap" 
                                        Text="The content will be different according to the language"/>
-
+                            </StackPanel>
+                            
+                            
                             <!--DYNAMIC TILE-->
-                            <TextBlock x:Name="TBDynamicTile"
-                                       Text="Dynamic Tile"
+                            <StackPanel x:Name="StackDynamictile"
+                                        Margin="0,0,0,42"
+                                        Height="32"
+                                        RenderTransformOrigin="0.5,0.5">
+                                
+                                <StackPanel x:Name="StackDynamictileHeader" 
+                                            Orientation="Horizontal"
+                                            RenderTransformOrigin=".5,0.5"
+                                            Tapped="StackDynamictileHeader_Tapped">
+                                    <StackPanel.RenderTransform>
+                                        <CompositeTransform/>
+                                    </StackPanel.RenderTransform>
+                                    
+                                    <TextBlock Text="dynamic tile" FontSize="26" FontWeight="Normal" 
+                                       Foreground="{ThemeResource PhoneForegroundBrush}"/>
+                                    <Image x:Name="CloseDynamictile" Height="25" Width="25" Source="/Assets/Icons/iconCancel-white.png" Margin="10,0,0,0"
+                                       RenderTransformOrigin="0.5,0.5">
+                                        <Image.RenderTransform>
+                                            <CompositeTransform Rotation="45"/>
+                                        </Image.RenderTransform>
+                                    </Image>
+                                </StackPanel>
+
+                                <TextBlock x:Name="TBDynamicTile"
+                                       Text="dynamic Tile"
                                        FontSize="22"
                                        Margin="0,24,0,0"/>
-                        
-                            <TextBlock Text="Different quotes will be displayed on the main tile of the start screen"
+
+                                <TextBlock Text="Different quotes will be displayed on the main tile of the start screen"
                                        Opacity="0.5"
                                        FontSize="16"
                                        TextWrapping="Wrap"/>
-                        
-                            <ToggleSwitch x:Name="TGDynamicTile"
+
+                                <ToggleSwitch x:Name="TGDynamicTile"
                                           OffContent="OFF"
                                           OnContent="ON"
-                                          Width="340"
+                                          Width="auto"
                                           HorizontalAlignment="Left"
                                           Toggled="TGDynamicTile_Toggled"/>
-
+                            </StackPanel>
+                            
+                            
                             <!--DYNAMIC BACKGROUND-->
-                            <TextBlock x:Name="TBDynamicBackground"
-                                       Text="Dynamic Background"
+                            <StackPanel x:Name="StackBackground"
+                                        Margin="0,0,0,42"
+                                        Height="32"
+                                        RenderTransformOrigin="0.5,0.5"
+                                        Tapped="StackBackground_Tapped">
+                                
+                                <StackPanel x:Name="StackBackgroundHeader" 
+                                            Orientation="Horizontal"
+                                            RenderTransformOrigin=".5,0.5">
+                                    <StackPanel.RenderTransform>
+                                        <CompositeTransform/>
+                                    </StackPanel.RenderTransform>
+                                    
+                                    <TextBlock Text="background" FontSize="26" FontWeight="Normal" 
+                                       Foreground="{ThemeResource PhoneForegroundBrush}"/>
+                                    <Image x:Name="CloseBackground" Height="25" Width="25" Source="/Assets/Icons/iconCancel-white.png" Margin="10,0,0,0"
+                                       RenderTransformOrigin="0.5,0.5">
+                                        <Image.RenderTransform>
+                                            <CompositeTransform Rotation="45"/>
+                                        </Image.RenderTransform>
+                                    </Image>
+                                </StackPanel>
+
+                                <TextBlock x:Name="TBDynamicBackground"
+                                       Text="dynamic Background"
                                        FontSize="22"
                                        Margin="0,24,0,0"/>
 
-                            <TextBlock Text="The background on the main screen will change regulary if this option is activated"
+                                <TextBlock Text="The background on the main screen will change regulary if this option is activated"
                                        Opacity="0.5"
                                        FontSize="16"
                                        TextWrapping="Wrap"/>
 
-                            <ToggleSwitch x:Name="TGDynamicBackground"
+                                <ToggleSwitch x:Name="TGDynamicBackground"
                                           OffContent="OFF"
                                           OnContent="ON"
-                                          Width="340"
+                                          Width="auto"
                                           HorizontalAlignment="Left"
                                           Toggled="TGDynamicBackground_Toggled"/>
-
+                            </StackPanel>
+                            
                         </StackPanel>
                     </ScrollViewer>
                 </PivotItem>
                 
-                <PivotItem Header="about">
-                    <StackPanel>
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock Text="about" FontSize="26"/>
+                    </PivotItem.Header>
+
+                    <StackPanel Margin="0,0,20,0">
+                        <TextBlock Text="Contact me if you have any problem or suggestion."
+                                   FontSize="22"
+                                   Opacity="0.5"
+                                   TextWrapping="Wrap"/>
                         <Button x:Name="ButtonContactMe" 
                                 Content="say something"
                                 HorizontalAlignment="Left"
-                                Width="340"
+                                Width="auto"
                                 Click="ButtonContactMe_Click"/>
-                        <TextBlock Text="Contact me if you have any problem or suggestion."
-                                   FontSize="18"
-                                   Opacity="0.5"
-                                   TextWrapping="Wrap"/>
                         
-                        <TextBlock x:Name="About"
-                                   Text="Version 1.1"
-                                   FontSize="18"
+                        <TextBlock x:Name="LogTB"
+                                   Text="What's new in this version"
+                                   FontSize="22"
+                                   Opacity="0.5"
                                    Margin="0,24,0,0"
                                    TextWrapping="Wrap"/>
-                        <TextBlock x:Name="AboutNotes"
-                                   Text="Initial release"
+                        <TextBlock x:Name="VersionTB"
+                                   Text="version 0.8"
                                    FontSize="18"
-                                   Opacity="0.5"
+                                   FontWeight="Bold"
+                                   Margin="0,4,0,0"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock x:Name="AboutNotesTB"
+                                   Text="-Initial release"
+                                   FontSize="18"
+                                   Opacity="1"
                                    Margin="0,0,0,0"
                                    TextWrapping="Wrap"/>
                     </StackPanel>

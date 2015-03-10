@@ -30,6 +30,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Backgrounds\bg2.jpg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Backgrounds\bg3.jpg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Fonts\Pacifico.ttf" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconCancel-white.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconCancel-black.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconCheckWhite.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconBulbWhite.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\iconBulbSadBlack.png" />

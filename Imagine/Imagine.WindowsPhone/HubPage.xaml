@@ -121,7 +121,7 @@
         <Hub x:Name="Hub" x:Uid="Hub">
             <Hub.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="40" Margin="0,24,0,0"/>
+                    <TextBlock Text="Imagine" FontFamily="{StaticResource Pacifico}" FontSize="32" Margin="42,24,0,0"/>
                 </DataTemplate>
             </Hub.HeaderTemplate>
             <Hub.Background>
@@ -131,11 +131,11 @@
             <Hub.RenderTransform>
                 <CompositeTransform/>
             </Hub.RenderTransform>
-            
+
             <HubSection x:Name="HubToday" x:Uid="HubSection1">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="TODAY" FontSize="24"/>
+                        <TextBlock Text="TODAY" FontSize="24" Margin="42,0,20,0"/>
                     </DataTemplate>
                 </HubSection.HeaderTemplate>
                 
@@ -151,6 +151,7 @@
                                   ItemsSource="{Binding}"
                                   IsItemClickEnabled="True"
                                   Visibility="Visible"
+                                  Margin="20,0,20,0"
                                   ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
@@ -184,7 +185,7 @@
             <HubSection x:Name="HubBefore" x:Uid="HubSection2">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="CITATIONS" FontSize="24"/>
+                        <TextBlock Text="CITATIONS" FontSize="24" Margin="20,0,20,0"/>
                     </DataTemplate>
                 </HubSection.HeaderTemplate>
                 
@@ -199,11 +200,13 @@
                         <ListView x:Name="ListViewBefore"
                                   ItemsSource="{Binding}"
                                   IsItemClickEnabled="True"
+                                  Margin="20,0,20,0"
                                   ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,27.5" Opacity="0" Loaded="ItemBefore_Loaded"
-                                                Tapped="Quote_Tapped" FlyoutBase.AttachedFlyout="{StaticResource QuoteMenuFlyout}">
+                                                Tapped="Quote_Tapped" Holding="Quote_Holding" 
+                                                FlyoutBase.AttachedFlyout="{StaticResource QuoteMenuFlyout}">
                                         <TextBlock Text="{Binding Content}" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
                                         <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light"/>
                                         <TextBlock Text="{Binding Reference}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>
@@ -218,7 +221,7 @@
             <HubSection x:Name="HubFavorites" x:Uid="HubSection3">
                 <HubSection.HeaderTemplate>
                     <DataTemplate>
-                        <TextBlock Text="FAVORITES" FontSize="24" />
+                        <TextBlock Text="FAVORITES" FontSize="24" Margin="20,0,20,0"/>
                     </DataTemplate>
                 </HubSection.HeaderTemplate>
                 
@@ -232,9 +235,10 @@
                         <TextBlock x:Name="TBVoid" 
                                    Text="Hey, there're no quotes in favorites for now."
                                    FontSize="24"
+                                   Height="100"
                                    TextWrapping="Wrap"
                                    FontWeight="ExtraLight"
-                                   Height="100"
+                                   Margin="20,0,20,0"
                                    VerticalAlignment="Top"
                                    />
                         </StackPanel>
@@ -242,11 +246,12 @@
                         <ListView x:Name="ListViewFavorites"
                                   ItemsSource="{Binding}"
                                   IsItemClickEnabled="True"
+                                  Margin="20,0,20,0"
                                   ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,27.5" Opacity="0" Loaded="ItemBefore_Loaded"
-                                                Tapped="Quote_Tapped" FlyoutBase.AttachedFlyout="{StaticResource FavoritesMenuFlyout}">
+                                                Tapped="Quote_Tapped" Holding="Quote_Holding" FlyoutBase.AttachedFlyout="{StaticResource FavoritesMenuFlyout}">
                                         <TextBlock Text="{Binding Content}" FontSize="24" FontWeight="Bold" TextWrapping="Wrap" />
                                         <TextBlock Text="{Binding User}" FontSize="20" FontWeight="Light"/>
                                         <TextBlock Text="{Binding Reference}" Style="{ThemeResource ListViewItemSubheaderTextBlockStyle}"/>

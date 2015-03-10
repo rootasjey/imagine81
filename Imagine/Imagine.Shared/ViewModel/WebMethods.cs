@@ -59,22 +59,22 @@ namespace Imagine.ViewModel
         /// <summary>
         /// Application language
         /// </summary>
-        public string applicationLanguage = "FR";
+        public string _applicationLanguage = "FR";
 
         /// <summary>
         /// True if it's the first time the app is launched
         /// </summary>
-        public bool firstApplicationLaunch = true;
+        public bool _firstApplicationLaunch = true;
 
         /// <summary>
         /// Tells if the user is authenticated
         /// </summary>
-        public bool isAuthenticated = false;
+        public bool _isAuthenticated = false;
 
         /// <summary>
         /// An array representing a user object (contains the user's firstname, lastname, id, language)
         /// </summary>
-        public dynamic userMicrosoft;
+        public dynamic _userMicrosoft;
 
         /// <summary>
         /// User object which contains MS id and name
@@ -93,7 +93,7 @@ namespace Imagine.ViewModel
         /// <summary>
         /// Si la base de données des citations a été modifiée (ajout de citation)
         /// </summary>
-        public bool databaseQuoteChanged = false;
+        public bool _databaseQuoteChanged = false;
 
         /// <summary>
         /// Tells if the app is running by the developper
@@ -148,7 +148,7 @@ namespace Imagine.ViewModel
 
             // Récupère la liste des citations
             _quotes = await App.MobileService.GetTable<Quote>()
-                                .Where(quote =>quote.Lang == applicationLanguage)
+                                .Where(quote =>quote.Lang == _applicationLanguage)
                                 .OrderByDescending(quote => quote.__createdAt)
                                 .ToCollectionAsync();
 
@@ -270,11 +270,11 @@ namespace Imagine.ViewModel
 
                 if (result.Status == LiveConnectSessionStatus.Connected)
                 {
-                    isAuthenticated = true;
+                    _isAuthenticated = true;
                     var connectClient = new LiveConnectClient(result.Session);
                     var meResult = await connectClient.GetAsync("me");
                     //dynamic meData = meResult.Result;
-                    userMicrosoft = meResult.Result;
+                    _userMicrosoft = meResult.Result;
                     return true;
                 }
 
@@ -322,9 +322,9 @@ namespace Imagine.ViewModel
 
         public async Task SetUserAttributes()
         {
-            if (userMicrosoft != null)
+            if (_userMicrosoft != null)
             {
-                _user = new User(null, userMicrosoft.first_name, userMicrosoft.id);
+                _user = new User(null, _userMicrosoft.first_name, _userMicrosoft.id);
                 //_user.Name = userMicrosoft.first_name;
                 //_user.Msid = userMicrosoft.id;
             }
@@ -644,9 +644,9 @@ namespace Imagine.ViewModel
             {
                 var applicationData = Windows.Storage.ApplicationData.Current;
                 var localSettings = applicationData.LocalSettings;
-                localSettings.Values["applicationLanguage"] = applicationLanguage;
-                localSettings.Values["isAuthenticated"] = isAuthenticated;
-                localSettings.Values["firstApplicationLaunch"] = firstApplicationLaunch;
+                localSettings.Values["applicationLanguage"] = _applicationLanguage;
+                localSettings.Values["isAuthenticated"] = _isAuthenticated;
+                localSettings.Values["firstApplicationLaunch"] = _firstApplicationLaunch;
                 localSettings.Values["_dynamicBackground"] = _dynamicBackground;
                 SaveUser();
             }
@@ -670,20 +670,20 @@ namespace Imagine.ViewModel
                 if (localSettings.Values.Keys.Contains("applicationLanguage"))
                 {
                     var lang = (string)localSettings.Values["applicationLanguage"];
-                    if (lang != null) applicationLanguage = lang;
+                    if (lang != null) _applicationLanguage = lang;
                 }
 
                 if (localSettings.Values.Keys.Contains("isAuthenticated"))
                 {
                     var auth = false;
                     auth = (bool)localSettings.Values["isAuthenticated"];
-                    if (auth != false) isAuthenticated = auth;
+                    if (auth != false) _isAuthenticated = auth;
                 }
 
                 if (localSettings.Values.Keys.Contains("firstApplicationLaunch"))
                 {
                     var launched = (bool)localSettings.Values["firstApplicationLaunch"];
-                    firstApplicationLaunch = launched;
+                    _firstApplicationLaunch = launched;
                 }
                 
                 if (localSettings.Values.Keys.Contains("_dynamicBackground"))
